@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, request, render_template, redirect, url_for
+from flask import Flask, jsonify, request, render_template, redirect, url_for ,request
 import random
 
 app = Flask(  # Create a flask app
@@ -8,15 +8,43 @@ app = Flask(  # Create a flask app
 )
 
 
-username = "siwarha"
+username = "razi"
 password = "123"
-facebook_friends=["Loai","Kenda","Avigail", "George", "Fouad", "Gi"]
+facebook_friends=["Loai","Kenda","Avigail", "George", "Fouad", "Ali"]
 
 
-@app.route('/')  # '/' for the default page
+
+@app.route('/', methods=['GET','POST'])
 def login():
-  return render_template('login.html')
-  
+	if request.method == 'POST':
+		name=request.form["username"]
+		ps =request.form["password"]
+		print("Post")
+		if name==username and ps == password :
+			return redirect(url_for('home'))
+		else:
+			return render_template('login.html')
+	return render_template('login.html')
+
+
+@app.route("/home")
+def home():
+	return render_template("home.html", fc=facebook_friends)
+
+
+
+@app.route("/friend_exist/<string:name>")
+def friend_exist(name):
+	s=False
+	for x in facebook_friends :
+		if x == name:
+			s=True
+	print(s)
+	print(name)
+	return render_template("friend_exists.html" ,n = name ,send = s)
+
+
+
 
 
 
